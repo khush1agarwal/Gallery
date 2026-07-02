@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="passwordScreen">
+    <div class="password-card">
+        <h1>Welcome to the Gallery</h1>
+
+        <p>
+            This exhibition has been curated for a special guest.
+            <br><br>
+            Enter the password to begin.
+        </p>
+
+        <input
+            id="passwordInput"
+            type="password"
+            placeholder="Password">
+
+        <button onclick="enterGallery()">
+            Enter
+        </button>
+
+        <p id="error"></p>
+    </div>
+</div>
     <main class="gallery-shell">
         <section class="room" id="room">
             <div class="wall left-wall" id="leftWall"></div>
