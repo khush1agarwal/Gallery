@@ -1,3 +1,5 @@
+const PASSWORD = "mwah";
+
 const FRAME_SHAPES = [
     "portrait", "portrait", "landscape", "square", "portrait",
     "landscape", "portrait", "square", "portrait", "landscape"
@@ -149,6 +151,26 @@ function renderGallery(items) {
     renderWall(rightWall, splitItems.rightItems, splitItems.leftItems.length);
 }
 
+function enterGallery() {
+    const input = document.getElementById("passwordInput");
+
+    if (input.value !== PASSWORD) {
+        document.getElementById("error").textContent = "Incorrect password.";
+        input.value = "";
+        return;
+    }
+
+    document.querySelector(".gallery-shell").style.opacity = "1";
+
+    const screen = document.getElementById("passwordScreen");
+
+    screen.style.opacity = "0";
+
+    setTimeout(function() {
+        screen.style.display = "none";
+    }, 800);
+}
+
 function openModal(item) {
     if (!item.image) {
         return;
@@ -191,6 +213,8 @@ function scrollToCorner() {
 
 async function initializeGallery() {
     try {
+        document.querySelector(".gallery-shell").style.opacity = "0";
+
         const items = await loadGallery();
         renderGallery(items);
         scrollToCorner();
@@ -200,10 +224,39 @@ async function initializeGallery() {
     }
 }
 
+function setMusicPlayingState(isPlaying) {
+    const gramophone = document.getElementById("gramophoneButton");
+
+    gramophone.classList.toggle("is-playing", isPlaying);
+    gramophone.setAttribute("aria-label", isPlaying ? "Pause Music" : "Play Music");
+    gramophone.dataset.tooltip = isPlaying ? "Pause Music" : "Play Music";
+}
+
+async function toggleMusic() {
+    const audio = document.getElementById("backgroundMusic");
+
+    if (audio.paused) {
+        try {
+            await audio.play();
+            setMusicPlayingState(true);
+        } catch (error) {
+            setMusicPlayingState(false);
+        }
+    } else {
+        audio.pause();
+        setMusicPlayingState(false);
+    }
+}
+
 document.getElementById("modal").addEventListener("click", closeModal);
 document.getElementById("closeModal").addEventListener("click", closeModal);
 document.getElementById("modalCard").addEventListener("click", function(event) {
     event.stopPropagation();
+});
+
+document.getElementById("gramophoneButton").addEventListener("click", toggleMusic);
+document.getElementById("backgroundMusic").addEventListener("ended", function() {
+    setMusicPlayingState(false);
 });
 
 document.addEventListener("keydown", function(event) {
@@ -213,5 +266,11 @@ document.addEventListener("keydown", function(event) {
 });
 
 document.getElementById("modalImage").addEventListener("load", fitCaptionToImage);
+document.getElementById("passwordInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        enterGallery();
+    }
+});
+
 window.addEventListener("resize", fitCaptionToImage);
 window.addEventListener("load", initializeGallery);
