@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corner Art Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="gallery-shell">
+        <section class="room" id="room">
+            <div class="wall left-wall" id="leftWall"></div>
+            <div class="corner" id="corner"></div>
+            <div class="wall right-wall" id="rightWall"></div>
+            <div class="baseboard"></div>
+            <div class="floor"></div>
+        </section>
+    </main>
+
+    <div class="scroll-note">Scroll sideways to move through the gallery, enjoy darling <3</div>
+
+    <div class="modal" id="modal">
+        <button class="close" type="button" id="closeModal">&times;</button>
+        <div class="modal-card" id="modalCard">
+            <img id="modalImage" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
