@@ -110,11 +110,9 @@ function createFrame(item, index) {
     }
 
     frameButton.appendChild(art);
-
     frameButton.addEventListener("click", function() {
         openModal(item);
     });
-
     frameButton.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             openModal(item);
@@ -129,7 +127,6 @@ function createFrame(item, index) {
     labelText.textContent = item.description || "";
 
     labelBox.appendChild(labelText);
-
     card.appendChild(frameButton);
     card.appendChild(labelBox);
 
@@ -150,17 +147,11 @@ function renderGallery(items) {
     const splitItems = splitGalleryItems(items);
 
     applyRoomSizing(splitItems.leftItems.length, splitItems.rightItems.length);
-
     renderWall(leftWall, splitItems.leftItems, 0);
     renderWall(rightWall, splitItems.rightItems, splitItems.leftItems.length);
 }
 
-/* ===========================
-   PASSWORD SCREEN
-=========================== */
-
 function enterGallery() {
-
     const input = document.getElementById("passwordInput");
 
     if (input.value !== PASSWORD) {
@@ -175,14 +166,10 @@ function enterGallery() {
 
     screen.style.opacity = "0";
 
-    setTimeout(function () {
+    setTimeout(function() {
         screen.style.display = "none";
     }, 800);
 }
-
-/* ===========================
-   MODAL
-=========================== */
 
 function openModal(item) {
     if (!item.image) {
@@ -196,9 +183,7 @@ function openModal(item) {
     modalImage.src = item.image;
     modalImage.alt = item.description || "Gallery image " + item.id;
     modalCaption.textContent = item.description || "";
-
     modal.classList.add("is-open");
-
     fitCaptionToImage();
 }
 
@@ -208,7 +193,6 @@ function fitCaptionToImage() {
 
     requestAnimationFrame(function() {
         const imageWidth = modalImage.getBoundingClientRect().width;
-
         if (imageWidth > 0) {
             modalCaption.style.width = imageWidth + "px";
         }
@@ -229,31 +213,50 @@ function scrollToCorner() {
 
 async function initializeGallery() {
     try {
-
         document.querySelector(".gallery-shell").style.opacity = "0";
 
         const items = await loadGallery();
-
         renderGallery(items);
-
         scrollToCorner();
-
     } catch (error) {
         console.error(error);
         renderGallery([]);
     }
 }
 
-/* ===========================
-   EVENT LISTENERS
-=========================== */
+function setMusicPlayingState(isPlaying) {
+    const gramophone = document.getElementById("gramophoneButton");
+
+    gramophone.classList.toggle("is-playing", isPlaying);
+    gramophone.setAttribute("aria-label", isPlaying ? "Pause Music" : "Play Music");
+    gramophone.dataset.tooltip = isPlaying ? "Pause Music" : "Play Music";
+}
+
+async function toggleMusic() {
+    const audio = document.getElementById("backgroundMusic");
+
+    if (audio.paused) {
+        try {
+            await audio.play();
+            setMusicPlayingState(true);
+        } catch (error) {
+            setMusicPlayingState(false);
+        }
+    } else {
+        audio.pause();
+        setMusicPlayingState(false);
+    }
+}
 
 document.getElementById("modal").addEventListener("click", closeModal);
-
 document.getElementById("closeModal").addEventListener("click", closeModal);
-
 document.getElementById("modalCard").addEventListener("click", function(event) {
     event.stopPropagation();
+});
+
+document.getElementById("gramophoneButton").addEventListener("click", toggleMusic);
+document.getElementById("backgroundMusic").addEventListener("ended", function() {
+    setMusicPlayingState(false);
 });
 
 document.addEventListener("keydown", function(event) {
@@ -263,13 +266,11 @@ document.addEventListener("keydown", function(event) {
 });
 
 document.getElementById("modalImage").addEventListener("load", fitCaptionToImage);
-
-window.addEventListener("resize", fitCaptionToImage);
-
 document.getElementById("passwordInput").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         enterGallery();
     }
 });
 
+window.addEventListener("resize", fitCaptionToImage);
 window.addEventListener("load", initializeGallery);
