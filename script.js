@@ -1,4 +1,4 @@
-const PASSWORD = "evil larry";
+const PASSWORD = "mwah";
 
 const FRAME_SHAPES = [
     "portrait", "portrait", "landscape", "square", "portrait",
