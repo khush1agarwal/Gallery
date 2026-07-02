@@ -152,25 +152,64 @@ function renderGallery(items) {
 }
 
 function enterGallery() {
+
     const input = document.getElementById("passwordInput");
 
     if (input.value !== PASSWORD) {
-        document.getElementById("error").textContent = "Incorrect password.";
+        document.getElementById("error").textContent = "Incorrect password weirdo.";
         input.value = "";
         return;
     }
 
-    document.querySelector(".gallery-shell").style.opacity = "1";
+    const password = document.getElementById("passwordScreen");
+    const curtains = document.getElementById("curtainOverlay");
+    const gallery = document.querySelector(".gallery-shell");
+    const music = document.getElementById("backgroundMusic");
 
-    const screen = document.getElementById("passwordScreen");
+    // Show gallery behind curtains
+    gallery.style.opacity = "1";
 
-    screen.style.opacity = "0";
+    // Hide password screen
+    password.style.opacity = "0";
 
-    setTimeout(function() {
-        screen.style.display = "none";
-    }, 800);
+    setTimeout(function () {
+        password.style.display = "none";
+
+        // Show curtains
+        curtains.classList.add("active");
+
+        // Wait a moment before opening them
+        setTimeout(function () {
+
+            music.volume = 0;
+
+            music.play().catch(() => {});
+
+            let volume = 0;
+
+            const fade = setInterval(function () {
+
+                volume += 0.05;
+
+                music.volume = Math.min(volume, 1);
+
+                if (volume >= 1) {
+                    clearInterval(fade);
+                }
+
+            }, 100);
+
+            curtains.classList.add("open");
+
+        }, 800);
+
+        // Remove curtains after animation
+        setTimeout(function () {
+            curtains.remove();
+        }, 3200);
+
+    }, 600);
 }
-
 function openModal(item) {
     if (!item.image) {
         return;
@@ -254,8 +293,10 @@ document.getElementById("modalCard").addEventListener("click", function(event) {
     event.stopPropagation();
 });
 
-document.getElementById("gramophoneButton").addEventListener("click", toggleMusic);
-document.getElementById("backgroundMusic").addEventListener("ended", function() {
+document.getElementById("gramophoneButton").addEventListener("click", function () {
+    console.log("Gramophone clicked!");
+    toggleMusic();
+});document.getElementById("backgroundMusic").addEventListener("ended", function() {
     setMusicPlayingState(false);
 });
 

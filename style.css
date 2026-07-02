@@ -574,3 +574,229 @@ body {
         grid-template-columns: repeat(17, 148px);
     }
 }
+/* =========================================================
+   THEATRE CURTAINS
+========================================================= */
+
+#curtainOverlay{
+
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:9500;
+
+    overflow:hidden;
+
+    display:none;
+}
+
+/* show overlay */
+#curtainOverlay.active{
+
+    display:block;
+}
+
+/* ========================================================= */
+
+.curtain{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:52vw;
+    height:100vh;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #4d0013 0px,
+            #65001b 22px,
+            #7a001f 42px,
+            #520014 62px
+        );
+
+    box-shadow:
+        inset -30px 0px 50px rgba(0,0,0,.45),
+        inset 30px 0px 50px rgba(255,255,255,.05);
+
+    transition:transform 2.2s cubic-bezier(.77,0,.18,1);
+}
+
+/* gold trim */
+
+.curtain::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    width:8px;
+
+    height:100%;
+
+    background:linear-gradient(
+        to bottom,
+        #f5dd8b,
+        #cfa94b,
+        #8d6926
+    );
+}
+
+.curtain-left{
+
+    left:0;
+
+    transform:translateX(0);
+}
+
+.curtain-left::after{
+
+    right:0;
+}
+
+.curtain-right{
+    left:auto;
+    right:0;
+
+    transform:translateX(0);
+}
+
+.curtain-right::after{
+
+    left:0;
+}
+
+/* ========================================================= */
+
+#curtainOverlay.open .curtain-left{
+
+    transform:translateX(-102%);
+}
+
+#curtainOverlay.open .curtain-right{
+
+    transform:translateX(102%);
+}
+
+/* ========================================================= */
+
+.tassel{
+
+    position:absolute;
+
+    bottom:120px;
+
+    width:14px;
+
+    height:140px;
+
+    background:#d7b45d;
+
+    border-radius:20px;
+}
+
+.curtain-left .tassel{
+
+    right:42px;
+}
+
+.curtain-right .tassel{
+
+    left:42px;
+}
+
+/* ========================================================= */
+
+.curtain-title{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    opacity:0;
+
+    transition:opacity .8s;
+
+    pointer-events:none;
+}
+
+.curtain-title h1{
+
+    font-size:68px;
+
+    font-family:Georgia,serif;
+
+    letter-spacing:4px;
+
+    margin:0;
+}
+
+.curtain-title p{
+
+    margin-top:16px;
+
+    font-size:22px;
+
+    letter-spacing:3px;
+
+    opacity:.8;
+}
+
+/* show title */
+
+#curtainOverlay.active .curtain-title{
+
+    opacity:1;
+}
+
+#curtainOverlay.open .curtain-title{
+
+    opacity:0;
+}
+
+/* ========================================================= */
+
+/* spotlight */
+
+#curtainOverlay::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-300px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:900px;
+
+    height:900px;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(255,255,220,.18),
+            transparent 70%
+        );
+
+    pointer-events:none;
+}
