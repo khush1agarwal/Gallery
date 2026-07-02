@@ -1,3 +1,5 @@
+const PASSWORD = "10052026";
+
 const FRAME_SHAPES = [
     "portrait", "portrait", "landscape", "square", "portrait",
     "landscape", "portrait", "square", "portrait", "landscape"
@@ -108,9 +110,11 @@ function createFrame(item, index) {
     }
 
     frameButton.appendChild(art);
+
     frameButton.addEventListener("click", function() {
         openModal(item);
     });
+
     frameButton.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             openModal(item);
@@ -125,6 +129,7 @@ function createFrame(item, index) {
     labelText.textContent = item.description || "";
 
     labelBox.appendChild(labelText);
+
     card.appendChild(frameButton);
     card.appendChild(labelBox);
 
@@ -145,9 +150,39 @@ function renderGallery(items) {
     const splitItems = splitGalleryItems(items);
 
     applyRoomSizing(splitItems.leftItems.length, splitItems.rightItems.length);
+
     renderWall(leftWall, splitItems.leftItems, 0);
     renderWall(rightWall, splitItems.rightItems, splitItems.leftItems.length);
 }
+
+/* ===========================
+   PASSWORD SCREEN
+=========================== */
+
+function enterGallery() {
+
+    const input = document.getElementById("passwordInput");
+
+    if (input.value !== PASSWORD) {
+        document.getElementById("error").textContent = "Incorrect password.";
+        input.value = "";
+        return;
+    }
+
+    document.querySelector(".gallery-shell").style.opacity = "1";
+
+    const screen = document.getElementById("passwordScreen");
+
+    screen.style.opacity = "0";
+
+    setTimeout(function () {
+        screen.style.display = "none";
+    }, 800);
+}
+
+/* ===========================
+   MODAL
+=========================== */
 
 function openModal(item) {
     if (!item.image) {
@@ -161,7 +196,9 @@ function openModal(item) {
     modalImage.src = item.image;
     modalImage.alt = item.description || "Gallery image " + item.id;
     modalCaption.textContent = item.description || "";
+
     modal.classList.add("is-open");
+
     fitCaptionToImage();
 }
 
@@ -171,6 +208,7 @@ function fitCaptionToImage() {
 
     requestAnimationFrame(function() {
         const imageWidth = modalImage.getBoundingClientRect().width;
+
         if (imageWidth > 0) {
             modalCaption.style.width = imageWidth + "px";
         }
@@ -191,17 +229,29 @@ function scrollToCorner() {
 
 async function initializeGallery() {
     try {
+
+        document.querySelector(".gallery-shell").style.opacity = "0";
+
         const items = await loadGallery();
+
         renderGallery(items);
+
         scrollToCorner();
+
     } catch (error) {
         console.error(error);
         renderGallery([]);
     }
 }
 
+/* ===========================
+   EVENT LISTENERS
+=========================== */
+
 document.getElementById("modal").addEventListener("click", closeModal);
+
 document.getElementById("closeModal").addEventListener("click", closeModal);
+
 document.getElementById("modalCard").addEventListener("click", function(event) {
     event.stopPropagation();
 });
@@ -213,5 +263,13 @@ document.addEventListener("keydown", function(event) {
 });
 
 document.getElementById("modalImage").addEventListener("load", fitCaptionToImage);
+
 window.addEventListener("resize", fitCaptionToImage);
+
+document.getElementById("passwordInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        enterGallery();
+    }
+});
+
 window.addEventListener("load", initializeGallery);
